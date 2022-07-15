@@ -1,4 +1,4 @@
-module meDemo/m/v2
+module meDemo
 
 go 1.16
 
