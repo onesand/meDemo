@@ -8,23 +8,16 @@ import (
 	"math"
 	"math/big"
 	"meDemo/client"
+	"meDemo/model"
 	"net/http"
 	"os"
+	"time"
 )
 
 var db = make(map[string]string)
 
 func setupRouter() *gin.Engine {
-	// Disable Console Color
-	// gin.DisableConsoleColor()
 	r := gin.Default()
-
-	err := client.ConnectEthNode()
-	if err != nil {
-		println("Eth init error," + err.Error())
-	} else {
-		println("Eth init successful")
-	}
 
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "fuck")
@@ -34,6 +27,9 @@ func setupRouter() *gin.Engine {
 	r.GET("/balance/:addr", func(c *gin.Context) {
 		address := c.Param("addr")
 		account := common.HexToAddress(address)
+		userAddress := model.UserAddress{Address: address, CreatedAt: time.Now()}
+		client.DB().Create(&userAddress)
+		//println("Add to db:" + result.Error.Error())
 		balance, err := client.EthClient().BalanceAt(context.Background(), account, nil)
 		if err != nil {
 			c.String(http.StatusOK, err.Error())
@@ -101,6 +97,8 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+	client.SetupConnections()
+
 	r := setupRouter()
 	port := os.Getenv("PORT")
 	if port == "" {

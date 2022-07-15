@@ -2,6 +2,7 @@ package client
 
 import (
 	"github.com/ethereum/go-ethereum/ethclient"
+	"meDemo/constant"
 )
 
 var ethClient *ethclient.Client
@@ -11,7 +12,7 @@ func EthClient() *ethclient.Client {
 }
 
 func ConnectEthNode() error {
-	cli, err := ethclient.Dial("https://mainnet.infura.io/v3/05dd7c9be52e4582a455da059ffd106a")
+	cli, err := ethclient.Dial(constant.NodeRpcUrl())
 	if err != nil {
 		return err
 	}
