@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-
 )
 
 var db = make(map[string]string)
@@ -12,6 +11,10 @@ func setupRouter() *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
+
+	r.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "fuck")
+	})
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
