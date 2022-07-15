@@ -1,7 +1,13 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/gin-gonic/gin"
+	"math"
+	"math/big"
+	"meDemo/client"
 	"net/http"
 	"os"
 )
@@ -13,8 +19,31 @@ func setupRouter() *gin.Engine {
 	// gin.DisableConsoleColor()
 	r := gin.Default()
 
+	err := client.ConnectEthNode()
+	if err != nil {
+		println("Eth init error," + err.Error())
+	} else {
+		println("Eth init successful")
+	}
+
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "fuck")
+	})
+
+	//Balance of
+	r.GET("/balance/:addr", func(c *gin.Context) {
+		address := c.Param("addr")
+		account := common.HexToAddress(address)
+		balance, err := client.EthClient().BalanceAt(context.Background(), account, nil)
+		if err != nil {
+			c.String(http.StatusOK, err.Error())
+			return
+		}
+		fbalance := new(big.Float)
+		fbalance.SetString(balance.String())
+		ethValue := new(big.Float).Quo(fbalance, big.NewFloat(math.Pow10(18)))
+		fmt.Println(ethValue)
+		c.String(http.StatusOK, ethValue.String())
 	})
 
 	// Ping test
