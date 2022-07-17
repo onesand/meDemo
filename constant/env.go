@@ -38,3 +38,7 @@ func ReservoirApiEndpoint() string {
 func ReservoirApiKey() string {
 	return envConfig.ReservoirApiKey
 }
+
+func NodeWsUrl() string {
+	return "wss://mainnet.infura.io/ws/v3/05dd7c9be52e4582a455da059ffd106a"
+}

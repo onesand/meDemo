@@ -10,6 +10,23 @@ func SetupConnections() {
 	SetupConnectionsWithDBConfig(&gorm.Config{})
 }
 
+func SetUpEthClient() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		// logrus.Info("Connecting to ethereum node...")
+		if err := ConnectEthNode(); err != nil {
+			println("Fail to connect to ethereum node," + err.Error())
+			panic(err)
+		} else {
+			println("Connected to ethereum node")
+		}
+	}()
+	wg.Wait()
+}
+
 func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 	var wg sync.WaitGroup
 	wg.Add(2)

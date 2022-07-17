@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,17 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "fuck")
+	})
+
+	r.GET("/transactionInBlock/:num", func(c *gin.Context) {
+		num := c.Param("num")
+		result := client.TransitionsInBlock(num)
+		resultJson, err := json.Marshal(result)
+		if err != nil {
+			c.String(http.StatusOK, err.Error())
+			return
+		}
+		c.String(http.StatusOK, string(resultJson))
 	})
 
 	//Balance of
@@ -106,4 +118,11 @@ func main() {
 	}
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":" + port)
+
+	//var rp = client.TransitionsInBlock("5671744")
+	//marshal, err := json.Marshal(rp)
+	//if err != nil {
+	//	return
+	//}
+	//println(string(marshal))
 }
