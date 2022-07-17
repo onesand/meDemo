@@ -119,10 +119,5 @@ func main() {
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":" + port)
 
-	//var rp = client.TransitionsInBlock("5671744")
-	//marshal, err := json.Marshal(rp)
-	//if err != nil {
-	//	return
-	//}
-	//println(string(marshal))
+	//client.SubscribeContractEvent()
 }

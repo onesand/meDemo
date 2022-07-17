@@ -2,6 +2,9 @@ package client
 
 import (
 	"context"
+	"fmt"
+	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"log"
@@ -11,9 +14,14 @@ import (
 )
 
 var ethClient *ethclient.Client
+var ethWsClient *ethclient.Client
 
 func EthClient() *ethclient.Client {
 	return ethClient
+}
+
+func EthWsClient() *ethclient.Client {
+	return ethWsClient
 }
 
 func ConnectEthNode() error {
@@ -23,6 +31,16 @@ func ConnectEthNode() error {
 	}
 
 	ethClient = cli
+	return nil
+}
+
+func ConnectEthWsNode() error {
+	cli, err := ethclient.Dial(constant.NodeWsUrl())
+	if err != nil {
+		return err
+	}
+
+	ethWsClient = cli
 	return nil
 }
 
@@ -69,4 +87,32 @@ func TransitionsInBlock(num string) model.BaseResponse {
 	response.Code = 200
 	response.Data = result
 	return response
+}
+
+func SubscribeContractEvent() {
+	err := ConnectEthWsNode()
+	if err != nil {
+		return
+	}
+
+	//0x3b484b82567a09e2588A13D54D032153f0c0aEe0
+	contractAddress := common.HexToAddress("0xdAC17F958D2ee523a2206206994597C13D831ec7")
+	query := ethereum.FilterQuery{
+		Addresses: []common.Address{contractAddress},
+	}
+
+	logs := make(chan types.Log)
+	sub, err := EthWsClient().SubscribeFilterLogs(context.Background(), query, logs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for {
+		select {
+		case err := <-sub.Err():
+			log.Fatal(err)
+		case vLog := <-logs:
+			fmt.Println(vLog) // pointer to event log
+		}
+	}
 }
