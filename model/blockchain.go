@@ -29,6 +29,7 @@ type TransactionsInBlockModel struct {
 	Value    string `json:"value"`
 	Gas      uint64 `json:"gas"`
 	GasPrice uint64 `json:"gas_price"`
+	GasUsed  uint64 `json:"gas_used"`
 	Nonce    uint64 `json:"nonce"`
 	Data     string `json:"data"`
 	From     string `json:"from"`

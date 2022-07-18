@@ -61,7 +61,8 @@ func TransitionsInBlock(num string) model.BaseResponse {
 			log.Fatal(err)
 		}
 
-		msg, err := tx.AsMessage(types.NewEIP155Signer(big.NewInt(1)), big.NewInt(0))
+		//(types.LatestSignerForChainID(big.NewInt(int64(1))), tx.GasPrice())
+		msg, err := tx.AsMessage(types.LatestSignerForChainID(big.NewInt(int64(1))), tx.GasPrice())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -71,8 +72,9 @@ func TransitionsInBlock(num string) model.BaseResponse {
 			Value:    tx.Value().String(),
 			Gas:      tx.Gas(),
 			GasPrice: tx.GasPrice().Uint64(),
+			GasUsed:  receipt.GasUsed,
 			Nonce:    tx.Nonce(),
-			//Data:     string(tx.Data()),
+			//Data:   	string(tx.Data()),
 			From:    msg.From().Hex(),
 			To:      tx.To().Hex(),
 			Receipt: receipt.Status,
