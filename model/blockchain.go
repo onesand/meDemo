@@ -6,18 +6,6 @@ import (
 	"time"
 )
 
-type LogTransfer struct {
-	From   common.Address
-	To     common.Address
-	Tokens *big.Int
-}
-
-type LogApproval struct {
-	TokenOwner common.Address
-	Spender    common.Address
-	Tokens     *big.Int
-}
-
 type UserAddress struct {
 	ID        uint64
 	Address   string
@@ -35,4 +23,20 @@ type TransactionsInBlockModel struct {
 	From     string `json:"from"`
 	To       string `json:"to"`
 	Receipt  uint64 `json:"receipt"`
+}
+
+//合约解析所用
+
+// LogTransfer ..
+type LogTransfer struct {
+	From   common.Address
+	To     common.Address
+	Tokens *big.Int
+}
+
+// LogApproval ..
+type LogApproval struct {
+	TokenOwner common.Address
+	Spender    common.Address
+	Tokens     *big.Int
 }
