@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -13,7 +14,6 @@ import (
 	"meDemo/constant"
 	token "meDemo/contract"
 	"meDemo/model"
-	"strconv"
 )
 
 var ethClient *ethclient.Client
@@ -185,42 +185,88 @@ func FreeMintMonitor() {
 		return
 	}
 
-	number, err := ethWsClient.BlockNumber(context.Background())
+	var freeModels []model.FreeMintMode
+	var contractIds []string
+	filter := ethereum.FilterQuery{}
+	logs := make(chan types.Log)
+	sub, err := ethWsClient.SubscribeFilterLogs(context.Background(), filter, logs)
 	if err != nil {
 		return
 	}
-	println("当前最新区块：" + strconv.FormatUint(number, 10))
 
-	block, err2 := ethWsClient.BlockByNumber(context.Background(), big.NewInt(int64(number)))
-	if err2 != nil {
-		return
-	}
-
-	var txs = block.Transactions()
-	print("当前区块包含交易数:")
-	println(txs.Len())
-	//contractMap := []string{}
-	for _, tx := range txs {
-		receipt, err := ethWsClient.TransactionReceipt(context.Background(), tx.Hash())
-		if err != nil {
-			return
-		}
-		if receipt.Status == 1 && tx.Value().String() == "0" {
-			// 判断是否erc721
+	for {
+		select {
+		case err := <-sub.Err():
+			log.Fatal(err)
+		case vLog := <-logs:
+			// erc721
 			// topics是否Transfer，并且只包含三个参数   是否从黑洞地址发出
-			if len(receipt.Logs) > 0 && len(receipt.Logs[0].Topics) == 4 && receipt.Logs[0].Topics[0] == common.HexToHash("0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") && receipt.Logs[0].Topics[1] == common.HexToHash("0x0000000000000000000000000000000000000000") {
-				//amount := len(receipt.Logs)
-				//collection := []string{}
-				//if contractMap. {
-				//
-				//}
+			if len(vLog.Topics) == 4 && vLog.Topics[0] == common.HexToHash("0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef") && vLog.Topics[1] == common.HexToHash("0x0000000000000000000000000000000000000000") {
 
-				println("检测到结果,txHash:" + receipt.TxHash.String())
-				println("合约地址:" + receipt.Logs[0].Address.String())
-				println("正在mint的tokenId：")
-				print(receipt.Logs[0].Topics[3].Big().String())
+				txHash := vLog.TxHash.String()
+				contractsAddress := vLog.Address.String()
+				//contractsAddress := "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"
+				tokenId := vLog.Topics[3].Big().String()
+
+				//已经记录，跳过
+				if contains(contractIds, contractsAddress) {
+					println("已经处理，略过")
+					continue
+				}
+
+				println("检测到结果,txHash:" + txHash)
+				println("合约地址:" + contractsAddress)
+				println("正在mint的tokenId：" + tokenId)
+
+				erc721, err := token.NewERC721(common.HexToAddress(contractsAddress), ethWsClient)
+				if err != nil {
+					return
+				}
+
+				opts := bind.CallOpts{
+					Pending:     false,
+					BlockNumber: nil,
+					Context:     nil,
+				}
+				tokenName, err := erc721.Name(&opts)
+				if err != nil {
+					println("无name，pass")
+					tokenName = ""
+				}
+				println("name==>>>" + tokenName)
+
+				supply, _ := erc721.TotalSupply(&opts)
+				if err != nil {
+					println("此合约未开源或者是纯土狗，pass")
+					supply = big.NewInt(0)
+				}
+				println("supply==>>>" + supply.String())
+
+				contractIds = append(contractIds, contractsAddress)
+
+				//达到一定数量后，存库
+				if len(contractIds) == 10 {
+					println("入库")
+				}
+
+				freeModel := model.FreeMintMode{
+					TxHash:          txHash,
+					ContractAddress: contractsAddress,
+					TokenId:         tokenId,
+					TokenName:       tokenName,
+				}
+				freeModels = append(freeModels, freeModel)
+				println("\n\n")
 			}
 		}
 	}
+}
 
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }

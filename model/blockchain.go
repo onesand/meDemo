@@ -25,6 +25,13 @@ type TransactionsInBlockModel struct {
 	Receipt  uint64 `json:"receipt"`
 }
 
+type FreeMintMode struct {
+	TxHash          string `json:"tx_hash"`
+	ContractAddress string `json:"contract_address"`
+	TokenId         string `json:"token_id"`
+	TokenName       string `json:"token_name"`
+}
+
 //合约解析所用
 
 // LogTransfer ..
