@@ -29,7 +29,7 @@ func SetUpEthClient() {
 
 func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 	var wg sync.WaitGroup
-	wg.Add(3)
+	wg.Add(4)
 
 	//go func() {
 	//	defer wg.Done()
@@ -42,15 +42,15 @@ func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 	//	}
 	//}()
 
-	//go func() {
-	//	defer wg.Done()
-	//	if err := ConnectionBot();err != nil {
-	//		println("Fail to connect to dc bot," + err.Error())
-	//		panic(err)
-	//	} else {
-	//		println("Connected to dc bot")
-	//	}
-	//}()
+	go func() {
+		defer wg.Done()
+		if err := ConnectionBot(); err != nil {
+			println("Fail to connect to dc bot," + err.Error())
+			panic(err)
+		} else {
+			println("Connected to dc bot")
+		}
+	}()
 
 	go func() {
 		defer wg.Done()

@@ -12,6 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/shopspring/decimal"
 	"log"
 	"math/big"
@@ -188,26 +189,26 @@ func FreeMintMonitor() {
 
 	SetupConnections()
 
-	followAddress := []string{
-		"0x8a42f0ab1dcbb65ca290d2b11bd3d88563569070",
-		"0xA6f4fa9840Aa6825446c820aF6d5eCcf9f78BA05",
-		"0x9c8F92bddF72b5B36Eaa4EA7F3d581CEc0802c13",
-		"0x709bF4aC7ED6Bb2F9d60b1215d983496AB68efbc",
-		"0xd640C898B0902bD02f69dE0FE8d0bd560956DB76",
-		"0x84BDbEaB9Dd28C17C6E11702934E5E9cFe566462",
-		"0x4cffe1FEa2B6918F6d9596B8274d0D859Ab1699e",
-		"0x6868B90BA68E48b3571928A7727201B9efE1D374",
-		"0x0fe60E55a8C0700b47d4a2663079c445Fc4A5893",
-		"0xba69593F1F51D4b2ff0a73298c8bE0C8586be931",
-		"0x6Eb5f7C3Aa91e974bE11f23CaBD3532458070CB9",
-		"0x18cCC241CcE98a67564E367eBc1F1f0e692E3188",
-		"0xA6C88571d0028f47ADba983A7240Bf12Af94633e",
-		"0xd6F6E99c4905c6e8A751Bb0aFeEFA8Dcc56a30dC",
-		"0x4c8F62f1498FA55D4158CdBFEA7783f84556a68e",
-		"0x0BeDa5116cD204c428379b5D852DADc04F3Bc384",
-
-		"0x6238872A0Bd9F0E19073695532a7Ed77ce93C69E",
-	}
+	//followAddress := []string{
+	//	"0x8a42f0ab1dcbb65ca290d2b11bd3d88563569070",
+	//	"0xA6f4fa9840Aa6825446c820aF6d5eCcf9f78BA05",
+	//	"0x9c8F92bddF72b5B36Eaa4EA7F3d581CEc0802c13",
+	//	"0x709bF4aC7ED6Bb2F9d60b1215d983496AB68efbc",
+	//	"0xd640C898B0902bD02f69dE0FE8d0bd560956DB76",
+	//	"0x84BDbEaB9Dd28C17C6E11702934E5E9cFe566462",
+	//	"0x4cffe1FEa2B6918F6d9596B8274d0D859Ab1699e",
+	//	"0x6868B90BA68E48b3571928A7727201B9efE1D374",
+	//	"0x0fe60E55a8C0700b47d4a2663079c445Fc4A5893",
+	//	"0xba69593F1F51D4b2ff0a73298c8bE0C8586be931",
+	//	"0x6Eb5f7C3Aa91e974bE11f23CaBD3532458070CB9",
+	//	"0x18cCC241CcE98a67564E367eBc1F1f0e692E3188",
+	//	"0xA6C88571d0028f47ADba983A7240Bf12Af94633e",
+	//	"0xd6F6E99c4905c6e8A751Bb0aFeEFA8Dcc56a30dC",
+	//	"0x4c8F62f1498FA55D4158CdBFEA7783f84556a68e",
+	//	"0x0BeDa5116cD204c428379b5D852DADc04F3Bc384",
+	//
+	//	"0x6238872A0Bd9F0E19073695532a7Ed77ce93C69E",
+	//}
 	var freeModels []model.FreeMintMode
 	var contractIds []string
 	DB().Table("free_mint_modes").Select("contract_address").Find(&contractIds)
@@ -261,8 +262,6 @@ func FreeMintMonitor() {
 					println("isPending:false")
 				}
 
-				mint(contractsAddress, transaction.Data())
-
 				// 判断是否free mint
 				if transaction.Value().Int64() != 0 {
 					println("此笔交易需要value：" + transaction.Value().String() + " 略过")
@@ -285,16 +284,19 @@ func FreeMintMonitor() {
 					println("\n\n")
 					continue
 				}
+
 				// 判断是否跟单列表的地址
-				if !contains(followAddress, msg.From().String()) {
-					println("在跟单列表里不匹配，略过")
-					println("\n\n")
-					continue
-				}
+				//if !contains(followAddress, msg.From().String()) {
+				//	println("在跟单列表里不匹配，略过")
+				//	println("\n\n")
+				//	continue
+				//}
 
 				erc721, err := token.NewERC721(common.HexToAddress(contractsAddress), ethWsClient)
 				if err != nil {
-					return
+					println("解析erc721出错，pass")
+					println("\n\n")
+					continue
 				}
 
 				opts := bind.CallOpts{
@@ -302,6 +304,7 @@ func FreeMintMonitor() {
 					BlockNumber: nil,
 					Context:     nil,
 				}
+
 				tokenName, err := erc721.Name(&opts)
 				if err != nil {
 					println("无name，pass")
@@ -313,16 +316,23 @@ func FreeMintMonitor() {
 				if err != nil {
 					println("此合约未开源或者是纯土狗，pass")
 					supply = big.NewInt(0)
+				} else {
+					println("supply：" + supply.String())
+					if supply == nil || supply.Uint64() < 100 {
+						println("可mint数量太少，pass")
+						println("\n\n")
+						continue
+					}
 				}
-				println("supply：" + supply.String())
 
 				contractIds = append(contractIds, contractsAddress)
 
 				//达到一定数量后，存库
-				if len(freeModels) == 2 {
+				if len(freeModels) == 3 {
 					println("入库")
 					DB().Create(&freeModels)
 					freeModels = nil
+					return
 				}
 
 				freeModel := model.FreeMintMode{
@@ -335,12 +345,16 @@ func FreeMintMonitor() {
 				}
 				freeModels = append(freeModels, freeModel)
 
+				result := mint(contractsAddress, transaction.Data())
+
 				// 发送消息到 dc
 				dcMessage := "监测到有新的FreeMint\n"
 				dcMessage = dcMessage + "合约地址：https://etherscan.io/token/" + contractsAddress + "\n"
-				send, err := BOT().ChannelMessageSend("999193783797293148", dcMessage)
+				dcMessage = dcMessage + "mint 结果：https://rinkeby.etherscan.io/tx/" + result
+				dcMessage = dcMessage + "\n\n"
+				_, err = BOT().ChannelMessageSend("999193783797293148", dcMessage)
 				if err != nil {
-					println("bot机器人发消息出错：" + err.Error() + "  " + send.Content)
+					println("bot机器人发消息出错：" + err.Error())
 					return
 				}
 				println("\n\n")
@@ -349,7 +363,7 @@ func FreeMintMonitor() {
 	}
 }
 
-func mint(contractAddress string, data []byte) {
+func mint(contractAddress string, data []byte) string {
 	//fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19
 	privateKey, err := crypto.HexToECDSA("fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19")
 	if err != nil {
@@ -405,19 +419,20 @@ func mint(contractAddress string, data []byte) {
 	println("需要gas:" + ToDecimal(CalcGasCost(gasLimit, gasPrice), 18).String())
 	println("0x" + rawTxHex)
 
-	//rawTxBytes, err := hex.DecodeString(rawTxHex)
-	//tx = new(types.Transaction)
-	//err = rlp.DecodeBytes(rawTxBytes, &tx)
-	//if err != nil {
-	//	return
-	//}
-	//
-	//err = EthClient().SendTransaction(context.Background(), tx)
-	//if err != nil {
-	//	println("SendTransaction 出错：" + err.Error())
-	//}
-	//
-	//println("tx sent: ", tx.Hash().Hex())
+	rawTxBytes, err := hex.DecodeString(rawTxHex)
+	tx = new(types.Transaction)
+	err = rlp.DecodeBytes(rawTxBytes, &tx)
+	if err != nil {
+		return err.Error()
+	}
+
+	err = EthClient().SendTransaction(context.Background(), tx)
+	if err != nil {
+		println("SendTransaction 出错：" + err.Error())
+	}
+
+	println("tx sent: ", tx.Hash().Hex())
+	return tx.Hash().String()
 }
 
 func ToDecimal(ivalue interface{}, decimals int) decimal.Decimal {
