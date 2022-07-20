@@ -12,7 +12,7 @@ import (
 	"meDemo/model"
 	"net/http"
 	"os"
-	"time"
+	_ "os"
 )
 
 var db = make(map[string]string)
@@ -39,7 +39,7 @@ func setupRouter() *gin.Engine {
 	r.GET("/balance/:addr", func(c *gin.Context) {
 		address := c.Param("addr")
 		account := common.HexToAddress(address)
-		userAddress := model.UserAddress{Address: address, CreatedAt: time.Now()}
+		userAddress := model.UserAddress{Address: address}
 		client.DB().Create(&userAddress)
 		//println("Add to db:" + result.Error.Error())
 		balance, err := client.EthClient().BalanceAt(context.Background(), account, nil)

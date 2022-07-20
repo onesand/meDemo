@@ -17,7 +17,8 @@ var envConfig struct {
 }
 
 func NodeRpcUrl() string {
-	return "https://mainnet.infura.io/v3/05dd7c9be52e4582a455da059ffd106a"
+	return "https://rinkeby.infura.io/v3/05dd7c9be52e4582a455da059ffd106a"
+	//return "https://mainnet.infura.io/v3/05dd7c9be52e4582a455da059ffd106a"
 }
 func Port() uint16 {
 	return envConfig.Port
@@ -40,5 +41,6 @@ func ReservoirApiKey() string {
 }
 
 func NodeWsUrl() string {
-	return "wss://mainnet.infura.io/ws/v3/05dd7c9be52e4582a455da059ffd106a"
+	return "wss://rinkeby.infura.io/ws/v3/05dd7c9be52e4582a455da059ffd106a"
+	//return "wss://mainnet.infura.io/ws/v3/05dd7c9be52e4582a455da059ffd106a"
 }

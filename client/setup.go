@@ -29,7 +29,7 @@ func SetUpEthClient() {
 
 func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 	var wg sync.WaitGroup
-	wg.Add(2)
+	wg.Add(3)
 
 	//go func() {
 	//	defer wg.Done()
@@ -42,6 +42,16 @@ func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 	//	}
 	//}()
 
+	//go func() {
+	//	defer wg.Done()
+	//	if err := ConnectionBot();err != nil {
+	//		println("Fail to connect to dc bot," + err.Error())
+	//		panic(err)
+	//	} else {
+	//		println("Connected to dc bot")
+	//	}
+	//}()
+
 	go func() {
 		defer wg.Done()
 		// logrus.Info("Connecting to database...")
@@ -50,6 +60,7 @@ func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 			panic(err)
 		} else {
 			err := DB().AutoMigrate(model.UserAddress{})
+			err = DB().AutoMigrate(model.FreeMintMode{})
 			if err != nil {
 				return
 			} else {
@@ -69,5 +80,17 @@ func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 			println("Connected to ethereum node")
 		}
 	}()
+
+	go func() {
+		defer wg.Done()
+		// logrus.Info("Connecting to ethereum node...")
+		if err := ConnectEthWsNode(); err != nil {
+			println("Fail to connect to ethereum ws node," + err.Error())
+			panic(err)
+		} else {
+			println("Connected to ethereum ws node")
+		}
+	}()
+
 	wg.Wait()
 }

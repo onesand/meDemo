@@ -3,13 +3,13 @@ package model
 import (
 	"github.com/ethereum/go-ethereum/common"
 	"math/big"
-	"time"
 )
 
 type UserAddress struct {
 	ID        uint64
 	Address   string
-	CreatedAt time.Time
+	CreatedAt int
+	UpdatedAt int
 }
 
 type TransactionsInBlockModel struct {
@@ -26,10 +26,15 @@ type TransactionsInBlockModel struct {
 }
 
 type FreeMintMode struct {
+	ID              uint64
+	CreatedAt       int
+	UpdatedAt       int
 	TxHash          string `json:"tx_hash"`
-	ContractAddress string `json:"contract_address"`
+	ContractAddress string `gorm:"primaryKey" json:"contract_address"`
 	TokenId         string `json:"token_id"`
 	TokenName       string `json:"token_name"`
+	TotalSupply     string `json:"total_supply"`
+	FollowBy        string `json:"follow_by"`
 }
 
 //合约解析所用

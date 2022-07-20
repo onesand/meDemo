@@ -6,8 +6,10 @@ go 1.18
 //heroku logs --tail  --app fringuante-mandarine-50948
 
 require (
+	github.com/bwmarrin/discordgo v0.25.0
 	github.com/ethereum/go-ethereum v1.10.20
 	github.com/gin-gonic/gin v1.8.1
+	github.com/shopspring/decimal v1.2.0
 	gorm.io/driver/postgres v1.3.8
 	gorm.io/gorm v1.23.8
 )
