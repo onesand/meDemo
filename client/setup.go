@@ -2,12 +2,15 @@ package client
 
 import (
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"meDemo/model"
 	"sync"
 )
 
 func SetupConnections() {
-	SetupConnectionsWithDBConfig(&gorm.Config{})
+	SetupConnectionsWithDBConfig(&gorm.Config{
+		Logger: logger.Default.LogMode(logger.Error),
+	})
 }
 
 func SetUpEthClient() {
@@ -61,6 +64,8 @@ func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 		} else {
 			err := DB().AutoMigrate(model.UserAddress{})
 			err = DB().AutoMigrate(model.FreeMintMode{})
+			err = DB().AutoMigrate(model.Mints{})
+			err = DB().AutoMigrate(model.Nft{})
 			if err != nil {
 				return
 			} else {

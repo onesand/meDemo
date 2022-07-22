@@ -30,7 +30,7 @@ var (
 
 // ERC721MetaData contains all meta data concerning the ERC721 contract.
 var ERC721MetaData = &bind.MetaData{
-	ABI: "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DESCRIPTION\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"doCall\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"idCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"}],\"name\":\"mintID\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"mintTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"fromIdx\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"mustMintTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"names\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"table\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // ERC721ABI is the input ABI used to generate the binding from.
@@ -179,9 +179,40 @@ func (_ERC721 *ERC721TransactorRaw) Transact(opts *bind.TransactOpts, method str
 	return _ERC721.Contract.contract.Transact(opts, method, params...)
 }
 
+// DESCRIPTION is a free data retrieval call binding the contract method 0xf1ae8856.
+//
+// Solidity: function DESCRIPTION() view returns(string)
+func (_ERC721 *ERC721Caller) DESCRIPTION(opts *bind.CallOpts) (string, error) {
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "DESCRIPTION")
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// DESCRIPTION is a free data retrieval call binding the contract method 0xf1ae8856.
+//
+// Solidity: function DESCRIPTION() view returns(string)
+func (_ERC721 *ERC721Session) DESCRIPTION() (string, error) {
+	return _ERC721.Contract.DESCRIPTION(&_ERC721.CallOpts)
+}
+
+// DESCRIPTION is a free data retrieval call binding the contract method 0xf1ae8856.
+//
+// Solidity: function DESCRIPTION() view returns(string)
+func (_ERC721 *ERC721CallerSession) DESCRIPTION() (string, error) {
+	return _ERC721.Contract.DESCRIPTION(&_ERC721.CallOpts)
+}
+
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
-// Solidity: function balanceOf(address owner) view returns(uint256 balance)
+// Solidity: function balanceOf(address owner) view returns(uint256)
 func (_ERC721 *ERC721Caller) BalanceOf(opts *bind.CallOpts, owner common.Address) (*big.Int, error) {
 	var out []interface{}
 	err := _ERC721.contract.Call(opts, &out, "balanceOf", owner)
@@ -198,21 +229,21 @@ func (_ERC721 *ERC721Caller) BalanceOf(opts *bind.CallOpts, owner common.Address
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
-// Solidity: function balanceOf(address owner) view returns(uint256 balance)
+// Solidity: function balanceOf(address owner) view returns(uint256)
 func (_ERC721 *ERC721Session) BalanceOf(owner common.Address) (*big.Int, error) {
 	return _ERC721.Contract.BalanceOf(&_ERC721.CallOpts, owner)
 }
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
-// Solidity: function balanceOf(address owner) view returns(uint256 balance)
+// Solidity: function balanceOf(address owner) view returns(uint256)
 func (_ERC721 *ERC721CallerSession) BalanceOf(owner common.Address) (*big.Int, error) {
 	return _ERC721.Contract.BalanceOf(&_ERC721.CallOpts, owner)
 }
 
 // GetApproved is a free data retrieval call binding the contract method 0x081812fc.
 //
-// Solidity: function getApproved(uint256 tokenId) view returns(address operator)
+// Solidity: function getApproved(uint256 tokenId) view returns(address)
 func (_ERC721 *ERC721Caller) GetApproved(opts *bind.CallOpts, tokenId *big.Int) (common.Address, error) {
 	var out []interface{}
 	err := _ERC721.contract.Call(opts, &out, "getApproved", tokenId)
@@ -229,16 +260,47 @@ func (_ERC721 *ERC721Caller) GetApproved(opts *bind.CallOpts, tokenId *big.Int) 
 
 // GetApproved is a free data retrieval call binding the contract method 0x081812fc.
 //
-// Solidity: function getApproved(uint256 tokenId) view returns(address operator)
+// Solidity: function getApproved(uint256 tokenId) view returns(address)
 func (_ERC721 *ERC721Session) GetApproved(tokenId *big.Int) (common.Address, error) {
 	return _ERC721.Contract.GetApproved(&_ERC721.CallOpts, tokenId)
 }
 
 // GetApproved is a free data retrieval call binding the contract method 0x081812fc.
 //
-// Solidity: function getApproved(uint256 tokenId) view returns(address operator)
+// Solidity: function getApproved(uint256 tokenId) view returns(address)
 func (_ERC721 *ERC721CallerSession) GetApproved(tokenId *big.Int) (common.Address, error) {
 	return _ERC721.Contract.GetApproved(&_ERC721.CallOpts, tokenId)
+}
+
+// IdCounter is a free data retrieval call binding the contract method 0xeb08ab28.
+//
+// Solidity: function idCounter() view returns(uint256)
+func (_ERC721 *ERC721Caller) IdCounter(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "idCounter")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// IdCounter is a free data retrieval call binding the contract method 0xeb08ab28.
+//
+// Solidity: function idCounter() view returns(uint256)
+func (_ERC721 *ERC721Session) IdCounter() (*big.Int, error) {
+	return _ERC721.Contract.IdCounter(&_ERC721.CallOpts)
+}
+
+// IdCounter is a free data retrieval call binding the contract method 0xeb08ab28.
+//
+// Solidity: function idCounter() view returns(uint256)
+func (_ERC721 *ERC721CallerSession) IdCounter() (*big.Int, error) {
+	return _ERC721.Contract.IdCounter(&_ERC721.CallOpts)
 }
 
 // IsApprovedForAll is a free data retrieval call binding the contract method 0xe985e9c5.
@@ -303,9 +365,71 @@ func (_ERC721 *ERC721CallerSession) Name() (string, error) {
 	return _ERC721.Contract.Name(&_ERC721.CallOpts)
 }
 
+// Names is a free data retrieval call binding the contract method 0x4622ab03.
+//
+// Solidity: function names(uint256 ) view returns(string)
+func (_ERC721 *ERC721Caller) Names(opts *bind.CallOpts, arg0 *big.Int) (string, error) {
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "names", arg0)
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// Names is a free data retrieval call binding the contract method 0x4622ab03.
+//
+// Solidity: function names(uint256 ) view returns(string)
+func (_ERC721 *ERC721Session) Names(arg0 *big.Int) (string, error) {
+	return _ERC721.Contract.Names(&_ERC721.CallOpts, arg0)
+}
+
+// Names is a free data retrieval call binding the contract method 0x4622ab03.
+//
+// Solidity: function names(uint256 ) view returns(string)
+func (_ERC721 *ERC721CallerSession) Names(arg0 *big.Int) (string, error) {
+	return _ERC721.Contract.Names(&_ERC721.CallOpts, arg0)
+}
+
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
+//
+// Solidity: function owner() view returns(address)
+func (_ERC721 *ERC721Caller) Owner(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "owner")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
+//
+// Solidity: function owner() view returns(address)
+func (_ERC721 *ERC721Session) Owner() (common.Address, error) {
+	return _ERC721.Contract.Owner(&_ERC721.CallOpts)
+}
+
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
+//
+// Solidity: function owner() view returns(address)
+func (_ERC721 *ERC721CallerSession) Owner() (common.Address, error) {
+	return _ERC721.Contract.Owner(&_ERC721.CallOpts)
+}
+
 // OwnerOf is a free data retrieval call binding the contract method 0x6352211e.
 //
-// Solidity: function ownerOf(uint256 tokenId) view returns(address owner)
+// Solidity: function ownerOf(uint256 tokenId) view returns(address)
 func (_ERC721 *ERC721Caller) OwnerOf(opts *bind.CallOpts, tokenId *big.Int) (common.Address, error) {
 	var out []interface{}
 	err := _ERC721.contract.Call(opts, &out, "ownerOf", tokenId)
@@ -322,16 +446,61 @@ func (_ERC721 *ERC721Caller) OwnerOf(opts *bind.CallOpts, tokenId *big.Int) (com
 
 // OwnerOf is a free data retrieval call binding the contract method 0x6352211e.
 //
-// Solidity: function ownerOf(uint256 tokenId) view returns(address owner)
+// Solidity: function ownerOf(uint256 tokenId) view returns(address)
 func (_ERC721 *ERC721Session) OwnerOf(tokenId *big.Int) (common.Address, error) {
 	return _ERC721.Contract.OwnerOf(&_ERC721.CallOpts, tokenId)
 }
 
 // OwnerOf is a free data retrieval call binding the contract method 0x6352211e.
 //
-// Solidity: function ownerOf(uint256 tokenId) view returns(address owner)
+// Solidity: function ownerOf(uint256 tokenId) view returns(address)
 func (_ERC721 *ERC721CallerSession) OwnerOf(tokenId *big.Int) (common.Address, error) {
 	return _ERC721.Contract.OwnerOf(&_ERC721.CallOpts, tokenId)
+}
+
+// RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
+//
+// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_ERC721 *ERC721Caller) RoyaltyInfo(opts *bind.CallOpts, tokenId *big.Int, salePrice *big.Int) (struct {
+	Receiver      common.Address
+	RoyaltyAmount *big.Int
+}, error) {
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "royaltyInfo", tokenId, salePrice)
+
+	outstruct := new(struct {
+		Receiver      common.Address
+		RoyaltyAmount *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.Receiver = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	outstruct.RoyaltyAmount = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
+//
+// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_ERC721 *ERC721Session) RoyaltyInfo(tokenId *big.Int, salePrice *big.Int) (struct {
+	Receiver      common.Address
+	RoyaltyAmount *big.Int
+}, error) {
+	return _ERC721.Contract.RoyaltyInfo(&_ERC721.CallOpts, tokenId, salePrice)
+}
+
+// RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
+//
+// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_ERC721 *ERC721CallerSession) RoyaltyInfo(tokenId *big.Int, salePrice *big.Int) (struct {
+	Receiver      common.Address
+	RoyaltyAmount *big.Int
+}, error) {
+	return _ERC721.Contract.RoyaltyInfo(&_ERC721.CallOpts, tokenId, salePrice)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
@@ -396,6 +565,37 @@ func (_ERC721 *ERC721CallerSession) Symbol() (string, error) {
 	return _ERC721.Contract.Symbol(&_ERC721.CallOpts)
 }
 
+// Table is a free data retrieval call binding the contract method 0xbafff8c0.
+//
+// Solidity: function table(uint256 ) view returns(string)
+func (_ERC721 *ERC721Caller) Table(opts *bind.CallOpts, arg0 *big.Int) (string, error) {
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "table", arg0)
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// Table is a free data retrieval call binding the contract method 0xbafff8c0.
+//
+// Solidity: function table(uint256 ) view returns(string)
+func (_ERC721 *ERC721Session) Table(arg0 *big.Int) (string, error) {
+	return _ERC721.Contract.Table(&_ERC721.CallOpts, arg0)
+}
+
+// Table is a free data retrieval call binding the contract method 0xbafff8c0.
+//
+// Solidity: function table(uint256 ) view returns(string)
+func (_ERC721 *ERC721CallerSession) Table(arg0 *big.Int) (string, error) {
+	return _ERC721.Contract.Table(&_ERC721.CallOpts, arg0)
+}
+
 // TokenByIndex is a free data retrieval call binding the contract method 0x4f6ccce7.
 //
 // Solidity: function tokenByIndex(uint256 index) view returns(uint256)
@@ -429,7 +629,7 @@ func (_ERC721 *ERC721CallerSession) TokenByIndex(index *big.Int) (*big.Int, erro
 
 // TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
 //
-// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256 tokenId)
+// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
 func (_ERC721 *ERC721Caller) TokenOfOwnerByIndex(opts *bind.CallOpts, owner common.Address, index *big.Int) (*big.Int, error) {
 	var out []interface{}
 	err := _ERC721.contract.Call(opts, &out, "tokenOfOwnerByIndex", owner, index)
@@ -446,14 +646,14 @@ func (_ERC721 *ERC721Caller) TokenOfOwnerByIndex(opts *bind.CallOpts, owner comm
 
 // TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
 //
-// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256 tokenId)
+// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
 func (_ERC721 *ERC721Session) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
 	return _ERC721.Contract.TokenOfOwnerByIndex(&_ERC721.CallOpts, owner, index)
 }
 
 // TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
 //
-// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256 tokenId)
+// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
 func (_ERC721 *ERC721CallerSession) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
 	return _ERC721.Contract.TokenOfOwnerByIndex(&_ERC721.CallOpts, owner, index)
 }
@@ -541,6 +741,111 @@ func (_ERC721 *ERC721TransactorSession) Approve(to common.Address, tokenId *big.
 	return _ERC721.Contract.Approve(&_ERC721.TransactOpts, to, tokenId)
 }
 
+// DoCall is a paid mutator transaction binding the contract method 0x3aada4d2.
+//
+// Solidity: function doCall(address target, bytes data) payable returns(bytes)
+func (_ERC721 *ERC721Transactor) DoCall(opts *bind.TransactOpts, target common.Address, data []byte) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "doCall", target, data)
+}
+
+// DoCall is a paid mutator transaction binding the contract method 0x3aada4d2.
+//
+// Solidity: function doCall(address target, bytes data) payable returns(bytes)
+func (_ERC721 *ERC721Session) DoCall(target common.Address, data []byte) (*types.Transaction, error) {
+	return _ERC721.Contract.DoCall(&_ERC721.TransactOpts, target, data)
+}
+
+// DoCall is a paid mutator transaction binding the contract method 0x3aada4d2.
+//
+// Solidity: function doCall(address target, bytes data) payable returns(bytes)
+func (_ERC721 *ERC721TransactorSession) DoCall(target common.Address, data []byte) (*types.Transaction, error) {
+	return _ERC721.Contract.DoCall(&_ERC721.TransactOpts, target, data)
+}
+
+// MintID is a paid mutator transaction binding the contract method 0xaeb25b33.
+//
+// Solidity: function mintID(address to, uint256 tokenID) returns()
+func (_ERC721 *ERC721Transactor) MintID(opts *bind.TransactOpts, to common.Address, tokenID *big.Int) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "mintID", to, tokenID)
+}
+
+// MintID is a paid mutator transaction binding the contract method 0xaeb25b33.
+//
+// Solidity: function mintID(address to, uint256 tokenID) returns()
+func (_ERC721 *ERC721Session) MintID(to common.Address, tokenID *big.Int) (*types.Transaction, error) {
+	return _ERC721.Contract.MintID(&_ERC721.TransactOpts, to, tokenID)
+}
+
+// MintID is a paid mutator transaction binding the contract method 0xaeb25b33.
+//
+// Solidity: function mintID(address to, uint256 tokenID) returns()
+func (_ERC721 *ERC721TransactorSession) MintID(to common.Address, tokenID *big.Int) (*types.Transaction, error) {
+	return _ERC721.Contract.MintID(&_ERC721.TransactOpts, to, tokenID)
+}
+
+// MintTo is a paid mutator transaction binding the contract method 0x449a52f8.
+//
+// Solidity: function mintTo(address to, uint256 amount) returns()
+func (_ERC721 *ERC721Transactor) MintTo(opts *bind.TransactOpts, to common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "mintTo", to, amount)
+}
+
+// MintTo is a paid mutator transaction binding the contract method 0x449a52f8.
+//
+// Solidity: function mintTo(address to, uint256 amount) returns()
+func (_ERC721 *ERC721Session) MintTo(to common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _ERC721.Contract.MintTo(&_ERC721.TransactOpts, to, amount)
+}
+
+// MintTo is a paid mutator transaction binding the contract method 0x449a52f8.
+//
+// Solidity: function mintTo(address to, uint256 amount) returns()
+func (_ERC721 *ERC721TransactorSession) MintTo(to common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _ERC721.Contract.MintTo(&_ERC721.TransactOpts, to, amount)
+}
+
+// MustMintTo is a paid mutator transaction binding the contract method 0xee7a3fd5.
+//
+// Solidity: function mustMintTo(address to, uint256 fromIdx, uint256 amount) returns()
+func (_ERC721 *ERC721Transactor) MustMintTo(opts *bind.TransactOpts, to common.Address, fromIdx *big.Int, amount *big.Int) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "mustMintTo", to, fromIdx, amount)
+}
+
+// MustMintTo is a paid mutator transaction binding the contract method 0xee7a3fd5.
+//
+// Solidity: function mustMintTo(address to, uint256 fromIdx, uint256 amount) returns()
+func (_ERC721 *ERC721Session) MustMintTo(to common.Address, fromIdx *big.Int, amount *big.Int) (*types.Transaction, error) {
+	return _ERC721.Contract.MustMintTo(&_ERC721.TransactOpts, to, fromIdx, amount)
+}
+
+// MustMintTo is a paid mutator transaction binding the contract method 0xee7a3fd5.
+//
+// Solidity: function mustMintTo(address to, uint256 fromIdx, uint256 amount) returns()
+func (_ERC721 *ERC721TransactorSession) MustMintTo(to common.Address, fromIdx *big.Int, amount *big.Int) (*types.Transaction, error) {
+	return _ERC721.Contract.MustMintTo(&_ERC721.TransactOpts, to, fromIdx, amount)
+}
+
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
+//
+// Solidity: function renounceOwnership() returns()
+func (_ERC721 *ERC721Transactor) RenounceOwnership(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "renounceOwnership")
+}
+
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
+//
+// Solidity: function renounceOwnership() returns()
+func (_ERC721 *ERC721Session) RenounceOwnership() (*types.Transaction, error) {
+	return _ERC721.Contract.RenounceOwnership(&_ERC721.TransactOpts)
+}
+
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
+//
+// Solidity: function renounceOwnership() returns()
+func (_ERC721 *ERC721TransactorSession) RenounceOwnership() (*types.Transaction, error) {
+	return _ERC721.Contract.RenounceOwnership(&_ERC721.TransactOpts)
+}
+
 // SafeTransferFrom is a paid mutator transaction binding the contract method 0x42842e0e.
 //
 // Solidity: function safeTransferFrom(address from, address to, uint256 tokenId) returns()
@@ -564,44 +869,44 @@ func (_ERC721 *ERC721TransactorSession) SafeTransferFrom(from common.Address, to
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
-func (_ERC721 *ERC721Transactor) SafeTransferFrom0(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
-	return _ERC721.contract.Transact(opts, "safeTransferFrom0", from, to, tokenId, data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
+func (_ERC721 *ERC721Transactor) SafeTransferFrom0(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "safeTransferFrom0", from, to, tokenId, _data)
 }
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
-func (_ERC721 *ERC721Session) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
-	return _ERC721.Contract.SafeTransferFrom0(&_ERC721.TransactOpts, from, to, tokenId, data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
+func (_ERC721 *ERC721Session) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
+	return _ERC721.Contract.SafeTransferFrom0(&_ERC721.TransactOpts, from, to, tokenId, _data)
 }
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
-func (_ERC721 *ERC721TransactorSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
-	return _ERC721.Contract.SafeTransferFrom0(&_ERC721.TransactOpts, from, to, tokenId, data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
+func (_ERC721 *ERC721TransactorSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
+	return _ERC721.Contract.SafeTransferFrom0(&_ERC721.TransactOpts, from, to, tokenId, _data)
 }
 
 // SetApprovalForAll is a paid mutator transaction binding the contract method 0xa22cb465.
 //
-// Solidity: function setApprovalForAll(address operator, bool _approved) returns()
-func (_ERC721 *ERC721Transactor) SetApprovalForAll(opts *bind.TransactOpts, operator common.Address, _approved bool) (*types.Transaction, error) {
-	return _ERC721.contract.Transact(opts, "setApprovalForAll", operator, _approved)
+// Solidity: function setApprovalForAll(address operator, bool approved) returns()
+func (_ERC721 *ERC721Transactor) SetApprovalForAll(opts *bind.TransactOpts, operator common.Address, approved bool) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "setApprovalForAll", operator, approved)
 }
 
 // SetApprovalForAll is a paid mutator transaction binding the contract method 0xa22cb465.
 //
-// Solidity: function setApprovalForAll(address operator, bool _approved) returns()
-func (_ERC721 *ERC721Session) SetApprovalForAll(operator common.Address, _approved bool) (*types.Transaction, error) {
-	return _ERC721.Contract.SetApprovalForAll(&_ERC721.TransactOpts, operator, _approved)
+// Solidity: function setApprovalForAll(address operator, bool approved) returns()
+func (_ERC721 *ERC721Session) SetApprovalForAll(operator common.Address, approved bool) (*types.Transaction, error) {
+	return _ERC721.Contract.SetApprovalForAll(&_ERC721.TransactOpts, operator, approved)
 }
 
 // SetApprovalForAll is a paid mutator transaction binding the contract method 0xa22cb465.
 //
-// Solidity: function setApprovalForAll(address operator, bool _approved) returns()
-func (_ERC721 *ERC721TransactorSession) SetApprovalForAll(operator common.Address, _approved bool) (*types.Transaction, error) {
-	return _ERC721.Contract.SetApprovalForAll(&_ERC721.TransactOpts, operator, _approved)
+// Solidity: function setApprovalForAll(address operator, bool approved) returns()
+func (_ERC721 *ERC721TransactorSession) SetApprovalForAll(operator common.Address, approved bool) (*types.Transaction, error) {
+	return _ERC721.Contract.SetApprovalForAll(&_ERC721.TransactOpts, operator, approved)
 }
 
 // TransferFrom is a paid mutator transaction binding the contract method 0x23b872dd.
@@ -623,6 +928,27 @@ func (_ERC721 *ERC721Session) TransferFrom(from common.Address, to common.Addres
 // Solidity: function transferFrom(address from, address to, uint256 tokenId) returns()
 func (_ERC721 *ERC721TransactorSession) TransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
 	return _ERC721.Contract.TransferFrom(&_ERC721.TransactOpts, from, to, tokenId)
+}
+
+// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
+//
+// Solidity: function transferOwnership(address newOwner) returns()
+func (_ERC721 *ERC721Transactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
+	return _ERC721.contract.Transact(opts, "transferOwnership", newOwner)
+}
+
+// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
+//
+// Solidity: function transferOwnership(address newOwner) returns()
+func (_ERC721 *ERC721Session) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
+	return _ERC721.Contract.TransferOwnership(&_ERC721.TransactOpts, newOwner)
+}
+
+// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
+//
+// Solidity: function transferOwnership(address newOwner) returns()
+func (_ERC721 *ERC721TransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, error) {
+	return _ERC721.Contract.TransferOwnership(&_ERC721.TransactOpts, newOwner)
 }
 
 // ERC721ApprovalIterator is returned from FilterApproval and is used to iterate over the raw logs and unpacked data for Approval events raised by the ERC721 contract.
@@ -935,6 +1261,159 @@ func (_ERC721 *ERC721Filterer) WatchApprovalForAll(opts *bind.WatchOpts, sink ch
 func (_ERC721 *ERC721Filterer) ParseApprovalForAll(log types.Log) (*ERC721ApprovalForAll, error) {
 	event := new(ERC721ApprovalForAll)
 	if err := _ERC721.contract.UnpackLog(event, "ApprovalForAll", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ERC721OwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the ERC721 contract.
+type ERC721OwnershipTransferredIterator struct {
+	Event *ERC721OwnershipTransferred // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ERC721OwnershipTransferredIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ERC721OwnershipTransferred)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ERC721OwnershipTransferred)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ERC721OwnershipTransferredIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ERC721OwnershipTransferredIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ERC721OwnershipTransferred represents a OwnershipTransferred event raised by the ERC721 contract.
+type ERC721OwnershipTransferred struct {
+	PreviousOwner common.Address
+	NewOwner      common.Address
+	Raw           types.Log // Blockchain specific contextual infos
+}
+
+// FilterOwnershipTransferred is a free log retrieval operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
+//
+// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
+func (_ERC721 *ERC721Filterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*ERC721OwnershipTransferredIterator, error) {
+
+	var previousOwnerRule []interface{}
+	for _, previousOwnerItem := range previousOwner {
+		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
+	}
+	var newOwnerRule []interface{}
+	for _, newOwnerItem := range newOwner {
+		newOwnerRule = append(newOwnerRule, newOwnerItem)
+	}
+
+	logs, sub, err := _ERC721.contract.FilterLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
+	if err != nil {
+		return nil, err
+	}
+	return &ERC721OwnershipTransferredIterator{contract: _ERC721.contract, event: "OwnershipTransferred", logs: logs, sub: sub}, nil
+}
+
+// WatchOwnershipTransferred is a free log subscription operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
+//
+// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
+func (_ERC721 *ERC721Filterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *ERC721OwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
+
+	var previousOwnerRule []interface{}
+	for _, previousOwnerItem := range previousOwner {
+		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
+	}
+	var newOwnerRule []interface{}
+	for _, newOwnerItem := range newOwner {
+		newOwnerRule = append(newOwnerRule, newOwnerItem)
+	}
+
+	logs, sub, err := _ERC721.contract.WatchLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ERC721OwnershipTransferred)
+				if err := _ERC721.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseOwnershipTransferred is a log parse operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
+//
+// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
+func (_ERC721 *ERC721Filterer) ParseOwnershipTransferred(log types.Log) (*ERC721OwnershipTransferred, error) {
+	event := new(ERC721OwnershipTransferred)
+	if err := _ERC721.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

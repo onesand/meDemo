@@ -25,6 +25,7 @@ type TransactionsInBlockModel struct {
 	Receipt  uint64 `json:"receipt"`
 }
 
+// FreeMintMode FreeMint 项目信息
 type FreeMintMode struct {
 	ID              uint64
 	CreatedAt       int
@@ -35,6 +36,35 @@ type FreeMintMode struct {
 	TokenName       string `json:"token_name"`
 	TotalSupply     string `json:"total_supply"`
 	FollowBy        string `json:"follow_by"`
+}
+
+// Mints address mint 的信息
+type Mints struct {
+	ID              uint64
+	CreatedAt       int
+	TxHash          string `json:"tx_hash"` // mint txHash
+	Address         string `json:"address"` // mint address
+	ContractAddress string `json:"contract_address"`
+	TokenName       string `json:"token_name"`
+	TotalSupply     string `json:"total_supply"`
+	FollowBy        string `json:"follow_by"`
+}
+
+type Nft struct {
+	ID              uint64
+	CreatedAt       int
+	UpdatedAt       int
+	ContractAddress string `json:"contract_address"`
+	TokenId         uint64 `gorm:"primaryKey" json:"token_id"`
+	Owner           string `json:"owner"`
+	TxHash          string `json:"tx_hash"`
+}
+
+type Asset struct {
+	ID              uint64
+	CreatedAt       int
+	UpdatedAt       int
+	ContractAddress string `json:"contract_address"`
 }
 
 //合约解析所用
