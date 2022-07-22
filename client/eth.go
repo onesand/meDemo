@@ -14,11 +14,13 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/shopspring/decimal"
+	"gorm.io/gorm/clause"
 	"log"
 	"math/big"
 	"meDemo/constant"
 	token "meDemo/contract"
 	"meDemo/model"
+	"strconv"
 	"strings"
 )
 
@@ -185,31 +187,212 @@ func Erc20LogsInBlock(start *big.Int, end *big.Int) {
 
 }
 
+// ScanAddressAsset 扫描地址资产
+func ScanAddressAsset() {
+	err := ConnectEthWsNode()
+	if err != nil {
+		return
+	}
+
+	currentBlockNumber, err := EthWsClient().BlockNumber(context.Background())
+	if err != nil {
+		return
+	}
+	println("当前区块：" + strconv.FormatUint(currentBlockNumber, 10))
+
+	logTransferSig := []byte("Transfer(address,address,uint256)")
+	logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
+
+	if end.Int64() == 0 {
+		end = big.NewInt(int64(currentBlockNumber))
+	}
+
+	address := common.HexToAddress("0xb816e2177F545b612e7590953F9C76983592b738")
+	filter := ethereum.FilterQuery{
+		FromBlock: start,
+		ToBlock:   end,
+		Topics:    [][]common.Hash{{logTransferSigHash}},
+	}
+	filterLogs, err := EthWsClient().FilterLogs(context.Background(), filter)
+	if err != nil {
+		error := err.Error()
+		println(error)
+
+		tips := strings.Split(error, ":")[1]
+		tipsArray := strings.Split(strings.Trim(tips, ""), ",")
+
+		suggestStart := strings.ReplaceAll(tipsArray[0], "[", "")
+		suggestStart = strings.ReplaceAll(suggestStart, "0x", "")
+		suggestStart = strings.TrimSpace(suggestStart)
+
+		n1, err := strconv.ParseUint(suggestStart, 16, 32)
+		if err != nil {
+			fmt.Println(err)
+		}
+		start = big.NewInt(int64(n1))
+
+		suggestEnd := strings.ReplaceAll(tipsArray[1], "]", "")
+		suggestEnd = strings.ReplaceAll(suggestEnd, "0x", "")
+		suggestEnd = strings.TrimSpace(suggestEnd)
+		n2, err := strconv.ParseUint(suggestEnd, 16, 32)
+		if err != nil {
+			fmt.Println(err)
+		}
+		end = big.NewInt(int64(n2))
+
+		println("建议 start：" + start.String() + ",end:" + end.String())
+		ScanAddressAsset()
+		return
+	}
+
+	for _, vLog := range filterLogs {
+		contractAddress := vLog.Address
+		println(contractAddress.String())
+		_, err := token.NewERC721Filterer(contractAddress, nil)
+		if err != nil {
+			println(err.Error())
+		}
+	}
+}
+
+var start = big.NewInt(0)
+var end = big.NewInt(0)
+
+// ScanNftHolds nft 持有者信息
+func ScanNftHolds() {
+	currentBlockNumber, err := EthWsClient().BlockNumber(context.Background())
+	if err != nil {
+		return
+	}
+
+	println("当前区块：" + strconv.FormatUint(currentBlockNumber, 10))
+
+	contractAddress := common.HexToAddress("0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D")
+
+	logTransferSig := []byte("Transfer(address,address,uint256)")
+	logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
+
+	if end.Int64() == 0 {
+		end = nil
+	}
+
+	println("开始查询 start:" + start.String() + " ,end:" + end.String())
+
+	filter := ethereum.FilterQuery{
+		Addresses: []common.Address{contractAddress},
+		FromBlock: start,
+		ToBlock:   end,
+		Topics:    [][]common.Hash{{logTransferSigHash}},
+	}
+
+	filterLogs, err := EthWsClient().FilterLogs(context.Background(), filter)
+	if err != nil {
+		error := err.Error()
+
+		tips := strings.Split(error, ":")[1]
+		tipsArray := strings.Split(strings.Trim(tips, ""), ",")
+
+		suggestStart := strings.ReplaceAll(tipsArray[0], "[", "")
+		suggestStart = strings.ReplaceAll(suggestStart, "0x", "")
+		suggestStart = strings.TrimSpace(suggestStart)
+
+		n1, err := strconv.ParseUint(suggestStart, 16, 32)
+		if err != nil {
+			fmt.Println(err)
+		}
+		start = big.NewInt(int64(n1))
+
+		suggestEnd := strings.ReplaceAll(tipsArray[1], "]", "")
+		suggestEnd = strings.ReplaceAll(suggestEnd, "0x", "")
+		suggestEnd = strings.TrimSpace(suggestEnd)
+		n2, err := strconv.ParseUint(suggestEnd, 16, 32)
+		if err != nil {
+			fmt.Println(err)
+		}
+		end = big.NewInt(int64(n2))
+
+		println(error)
+		println("建议 start：" + start.String() + ",end:" + end.String())
+		ScanNftHolds()
+		return
+	}
+
+	println("获取到转账笔数：" + big.NewInt(int64(len(filterLogs))).String())
+
+	if len(filterLogs) == 0 {
+		println("已无转账记录，扫描结束")
+		return
+	}
+
+	result := make(map[string]model.Nft)
+	for _, vLog := range filterLogs {
+		erc721Filterer, err := token.NewERC721Filterer(contractAddress, nil)
+		if err != nil {
+			return
+		}
+		transfer, err := erc721Filterer.ParseTransfer(vLog)
+		if err != nil {
+			return
+		}
+
+		nft := model.Nft{
+			Owner:           transfer.To.Hex(),
+			TokenId:         transfer.TokenId.Uint64(),
+			TxHash:          vLog.TxHash.String(),
+			ContractAddress: contractAddress.String(),
+		}
+		result[transfer.TokenId.String()] = nft
+	}
+
+	var finalResult []model.Nft
+	var progress = 0.0
+	for _, nft := range result {
+		finalResult = append(finalResult, nft)
+		if len(finalResult) == 100 {
+			DB().Clauses(clause.OnConflict{
+				Columns: []clause.Column{
+					{Name: "token_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"owner", "tx_hash", "updated_at"}),
+			}).Create(&finalResult)
+
+			finalResult = nil
+			progress = progress + 1
+			percent := progress * 100.0 / float64(len(result))
+			s := strconv.FormatFloat(percent*100, 'f', 2, 64) + "%"
+			println(s)
+		}
+	}
+
+	start = end
+	end = big.NewInt(int64(currentBlockNumber))
+	ScanNftHolds()
+}
+
 func FreeMintMonitor() {
 
 	SetupConnections()
 
-	//followAddress := []string{
-	//	"0x8a42f0ab1dcbb65ca290d2b11bd3d88563569070",
-	//	"0xA6f4fa9840Aa6825446c820aF6d5eCcf9f78BA05",
-	//	"0x9c8F92bddF72b5B36Eaa4EA7F3d581CEc0802c13",
-	//	"0x709bF4aC7ED6Bb2F9d60b1215d983496AB68efbc",
-	//	"0xd640C898B0902bD02f69dE0FE8d0bd560956DB76",
-	//	"0x84BDbEaB9Dd28C17C6E11702934E5E9cFe566462",
-	//	"0x4cffe1FEa2B6918F6d9596B8274d0D859Ab1699e",
-	//	"0x6868B90BA68E48b3571928A7727201B9efE1D374",
-	//	"0x0fe60E55a8C0700b47d4a2663079c445Fc4A5893",
-	//	"0xba69593F1F51D4b2ff0a73298c8bE0C8586be931",
-	//	"0x6Eb5f7C3Aa91e974bE11f23CaBD3532458070CB9",
-	//	"0x18cCC241CcE98a67564E367eBc1F1f0e692E3188",
-	//	"0xA6C88571d0028f47ADba983A7240Bf12Af94633e",
-	//	"0xd6F6E99c4905c6e8A751Bb0aFeEFA8Dcc56a30dC",
-	//	"0x4c8F62f1498FA55D4158CdBFEA7783f84556a68e",
-	//	"0x0BeDa5116cD204c428379b5D852DADc04F3Bc384",
-	//
-	//	"0x6238872A0Bd9F0E19073695532a7Ed77ce93C69E",
-	//}
-	var freeModels []model.FreeMintMode
+	enableFollow := false
+	followAddress := []string{
+		"0x8a42f0ab1dcbb65ca290d2b11bd3d88563569070",
+		"0xA6f4fa9840Aa6825446c820aF6d5eCcf9f78BA05",
+		"0x9c8F92bddF72b5B36Eaa4EA7F3d581CEc0802c13",
+		"0x709bF4aC7ED6Bb2F9d60b1215d983496AB68efbc",
+		"0xd640C898B0902bD02f69dE0FE8d0bd560956DB76",
+		"0x84BDbEaB9Dd28C17C6E11702934E5E9cFe566462",
+		"0x4cffe1FEa2B6918F6d9596B8274d0D859Ab1699e",
+		"0x6868B90BA68E48b3571928A7727201B9efE1D374",
+		"0x0fe60E55a8C0700b47d4a2663079c445Fc4A5893",
+		"0xba69593F1F51D4b2ff0a73298c8bE0C8586be931",
+		"0x6Eb5f7C3Aa91e974bE11f23CaBD3532458070CB9",
+		"0x18cCC241CcE98a67564E367eBc1F1f0e692E3188",
+		"0xA6C88571d0028f47ADba983A7240Bf12Af94633e",
+		"0xd6F6E99c4905c6e8A751Bb0aFeEFA8Dcc56a30dC",
+		"0x4c8F62f1498FA55D4158CdBFEA7783f84556a68e",
+		"0x0BeDa5116cD204c428379b5D852DADc04F3Bc384",
+
+		"0x6238872A0Bd9F0E19073695532a7Ed77ce93C69E",
+	}
 	var contractIds []string
 	DB().Table("free_mint_modes").Select("contract_address").Find(&contractIds)
 	//marshal, err := json.Marshal(contractIds)
@@ -243,6 +426,8 @@ func FreeMintMonitor() {
 					//println("已经处理，略过")
 					continue
 				}
+
+				contractIds = append(contractIds, contractsAddress)
 
 				println("检测到结果,txHash:" + txHash)
 				println("合约地址:" + contractsAddress)
@@ -278,25 +463,32 @@ func FreeMintMonitor() {
 					continue
 				}
 
-				// 收发不能是自己
-				if strings.ToLower(transaction.To().String()) == strings.ToLower(msg.From().String()) {
-					println("此笔交易是自己转账到自己，略过")
+				// 判断transfer里面to地址是否交易发起人
+				if common.HexToAddress(vLog.Topics[2].Hex()).String() != msg.From().String() {
+					println("topics[2]不是发起人地址，略过")
 					println("\n\n")
 					continue
 				}
 
+				// 收发不能是自己
+				if transaction.To() != nil && strings.ToLower(transaction.To().String()) == strings.ToLower(msg.From().String()) {
+					println("此笔交易是自己转账到自己，略过")
+					println("\n\n")
+					continue
+				}
 				// 判断是否跟单列表的地址
-				//if !contains(followAddress, msg.From().String()) {
-				//	println("在跟单列表里不匹配，略过")
-				//	println("\n\n")
-				//	continue
-				//}
+				followByAddress := ""
+				if enableFollow && !contains(followAddress, msg.From().String()) {
+					println("在跟单列表里不匹配，略过")
+					println("\n\n")
+					continue
+				} else {
+					followByAddress = msg.From().String()
+				}
 
 				erc721, err := token.NewERC721(common.HexToAddress(contractsAddress), ethWsClient)
 				if err != nil {
-					println("解析erc721出错，pass")
-					println("\n\n")
-					continue
+					return
 				}
 
 				opts := bind.CallOpts{
@@ -304,7 +496,21 @@ func FreeMintMonitor() {
 					BlockNumber: nil,
 					Context:     nil,
 				}
+				// 是否项目方mint
+				owner, err := erc721.Owner(&opts)
+				if err != nil {
+					println("获取owner地址出错，略过" + err.Error())
+					println("\n\n")
+					continue
+				}
+				println("owner 地址：" + owner.String())
+				if owner.String() == msg.From().String() {
+					println("项目方自己mint，略过")
+					println("\n\n")
+					continue
+				}
 
+				// 获取tokenName
 				tokenName, err := erc721.Name(&opts)
 				if err != nil {
 					println("无name，pass")
@@ -312,28 +518,19 @@ func FreeMintMonitor() {
 				}
 				println("name：" + tokenName)
 
+				// 获取发行量
 				supply, _ := erc721.TotalSupply(&opts)
 				if err != nil {
 					println("此合约未开源或者是纯土狗，pass")
 					supply = big.NewInt(0)
 				} else {
-					println("supply：" + supply.String())
-					if supply == nil || supply.Uint64() < 100 {
-						println("可mint数量太少，pass")
+					if supply == nil || supply.Int64() < 100 {
+						println("可mint数量太少，supply = " + supply.String() + "  pass")
 						println("\n\n")
 						continue
 					}
 				}
-
-				contractIds = append(contractIds, contractsAddress)
-
-				//达到一定数量后，存库
-				if len(freeModels) == 3 {
-					println("入库")
-					DB().Create(&freeModels)
-					freeModels = nil
-					return
-				}
+				println("supply：" + supply.String())
 
 				freeModel := model.FreeMintMode{
 					TxHash:          txHash,
@@ -343,18 +540,32 @@ func FreeMintMonitor() {
 					TotalSupply:     supply.String(),
 					FollowBy:        msg.From().String(),
 				}
-				freeModels = append(freeModels, freeModel)
 
-				result := mint(contractsAddress, transaction.Data())
+				// 存库
+				println("入库")
+				DB().Create(&freeModel)
 
-				// 发送消息到 dc
+				addr, tx := mint(contractsAddress, transaction.Data())
+
+				// 保存mint结果到DB
+				mintResult := model.Mints{
+					TxHash:          tx,
+					Address:         addr,
+					ContractAddress: contractsAddress,
+					TokenName:       tokenName,
+					TotalSupply:     supply.String(),
+					FollowBy:        followByAddress,
+				}
+				DB().Create(&mintResult)
+
+				// 发送消息到dc
 				dcMessage := "监测到有新的FreeMint\n"
-				dcMessage = dcMessage + "合约地址：https://etherscan.io/token/" + contractsAddress + "\n"
-				dcMessage = dcMessage + "mint 结果：https://rinkeby.etherscan.io/tx/" + result
-				dcMessage = dcMessage + "\n\n"
-				_, err = BOT().ChannelMessageSend("999193783797293148", dcMessage)
+				dcMessage = dcMessage + "Name:" + tokenName + "\n"
+				dcMessage = dcMessage + "合约地址：https://rinkeby.etherscan.io/token/" + contractsAddress + "\n"
+				dcMessage = dcMessage + "mint 结果：https://rinkeby.etherscan.io/tx/" + tx + "\n"
+				send, err := BOT().ChannelMessageSend("999193783797293148", dcMessage)
 				if err != nil {
-					println("bot机器人发消息出错：" + err.Error())
+					println("bot机器人发消息出错：" + err.Error() + "  " + send.Content)
 					return
 				}
 				println("\n\n")
@@ -363,9 +574,9 @@ func FreeMintMonitor() {
 	}
 }
 
-func mint(contractAddress string, data []byte) string {
+func mint(contractAddress string, data []byte) (string, string) {
 	//fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19
-	privateKey, err := crypto.HexToECDSA("fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19")
+	privateKey, err := crypto.HexToECDSA("50578aff07576b873e00b04be858fd5c0ad3be19ea7aae2bd1e5a3f5ebaabb0a")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -415,15 +626,13 @@ func mint(contractAddress string, data []byte) string {
 	bytedata := new(bytes.Buffer)
 	ts.EncodeIndex(0, bytedata)
 	rawTxHex := hex.EncodeToString(bytedata.Bytes())
-
-	println("需要gas:" + ToDecimal(CalcGasCost(gasLimit, gasPrice), 18).String())
 	println("0x" + rawTxHex)
 
 	rawTxBytes, err := hex.DecodeString(rawTxHex)
 	tx = new(types.Transaction)
 	err = rlp.DecodeBytes(rawTxBytes, &tx)
 	if err != nil {
-		return err.Error()
+		return fromAddress.String(), err.Error()
 	}
 
 	err = EthClient().SendTransaction(context.Background(), tx)
@@ -432,7 +641,7 @@ func mint(contractAddress string, data []byte) string {
 	}
 
 	println("tx sent: ", tx.Hash().Hex())
-	return tx.Hash().String()
+	return fromAddress.String(), tx.Hash().String()
 }
 
 func ToDecimal(ivalue interface{}, decimals int) decimal.Decimal {
