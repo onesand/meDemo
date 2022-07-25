@@ -51,20 +51,24 @@ type Mints struct {
 }
 
 type Nft struct {
-	ID              uint64
+	ID              string `json:"id" 'gorm:"primaryKey" json:"id"`
 	CreatedAt       int
 	UpdatedAt       int
 	ContractAddress string `json:"contract_address"`
-	TokenId         uint64 `gorm:"primaryKey" json:"token_id"`
+	TokenId         string `json:"token_id"`
 	Owner           string `json:"owner"`
 	TxHash          string `json:"tx_hash"`
 }
 
 type Asset struct {
-	ID              uint64
+	ID              string `gorm:"primaryKey" json:"id"`
 	CreatedAt       int
 	UpdatedAt       int
 	ContractAddress string `json:"contract_address"`
+	AssetType       string `json:"asset_type"`
+	Balance         string `json:"balance"`
+	Address         string `json:"address"`
+	Nfts            []Nft  `gorm:"-:all"`
 }
 
 //合约解析所用

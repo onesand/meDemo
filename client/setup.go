@@ -66,6 +66,7 @@ func SetupConnectionsWithDBConfig(gormOption gorm.Option) {
 			err = DB().AutoMigrate(model.FreeMintMode{})
 			err = DB().AutoMigrate(model.Mints{})
 			err = DB().AutoMigrate(model.Nft{})
+			err = DB().AutoMigrate(model.Asset{})
 			if err != nil {
 				return
 			} else {

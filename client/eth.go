@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -189,10 +190,10 @@ func Erc20LogsInBlock(start *big.Int, end *big.Int) {
 
 // ScanAddressAsset 扫描地址资产
 func ScanAddressAsset() {
-	err := ConnectEthWsNode()
-	if err != nil {
-		return
-	}
+	//err := ConnectEthWsNode()
+	//if err != nil {
+	//	return
+	//}
 
 	currentBlockNumber, err := EthWsClient().BlockNumber(context.Background())
 	if err != nil {
@@ -201,19 +202,34 @@ func ScanAddressAsset() {
 	println("当前区块：" + strconv.FormatUint(currentBlockNumber, 10))
 
 	logTransferSig := []byte("Transfer(address,address,uint256)")
+	//0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62
+	logerc1155TransferSig := []byte("TransferSingle(address,address,address,uint256,uint256)")
 	logTransferSigHash := crypto.Keccak256Hash(logTransferSig)
+	logerc1155TransferSigHash := crypto.Keccak256Hash(logerc1155TransferSig)
 
 	if end.Int64() == 0 {
 		end = big.NewInt(int64(currentBlockNumber))
 	}
 
 	address := common.HexToAddress("0xb816e2177F545b612e7590953F9C76983592b738")
+
+	// 查询erc20 erc721的过滤
 	filter := ethereum.FilterQuery{
 		FromBlock: start,
-		ToBlock:   end,
-		Topics:    [][]common.Hash{{logTransferSigHash}},
+		//FromBlock: big.NewInt(13892992),
+		ToBlock: end,
+		Topics:  [][]common.Hash{{logTransferSigHash, logerc1155TransferSigHash}, {}, {address.Hash()}},
 	}
 	filterLogs, err := EthWsClient().FilterLogs(context.Background(), filter)
+
+	//查询erc1155的过滤
+	filtererc1155 := ethereum.FilterQuery{
+		FromBlock: start,
+		ToBlock:   end,
+		Topics:    [][]common.Hash{{logerc1155TransferSigHash}, {}, {}, {address.Hash()}},
+	}
+	filtererc1155Logs, err := EthWsClient().FilterLogs(context.Background(), filtererc1155)
+
 	if err != nil {
 		error := err.Error()
 		println(error)
@@ -245,13 +261,194 @@ func ScanAddressAsset() {
 		return
 	}
 
+	asset := model.Asset{}
+	assets := []model.Asset{}
+
+	for _, erc1155Log := range filtererc1155Logs {
+		contractAddress := erc1155Log.Address
+		asset.ContractAddress = contractAddress.String()
+		println("tx:" + erc1155Log.TxHash.String())
+
+		// 判断是否 erc1155 资产
+		erc1155, err := token.NewERC1155(contractAddress, EthWsClient())
+		if err != nil {
+			println("erc1155 err:" + err.Error())
+		} else {
+			erc1155Transfer, err := erc1155.ParseTransferSingle(erc1155Log)
+			if err != nil {
+				println("erc1155Transfer err:" + err.Error())
+			} else {
+				asset.ID = address.String() + "-" + contractAddress.String()
+				asset.Address = address.String()
+				asset.AssetType = "erc1155"
+				//获取转账的 tokenId
+				balanceOf, err := erc1155.BalanceOf(&bind.CallOpts{}, address, erc1155Transfer.Id)
+				if err != nil {
+					println("erc1155Ownerof err:" + err.Error() + " id:" + erc1155Transfer.Id.String())
+				} else {
+					asset.Balance = balanceOf.String()
+					if balanceOf.Int64() != 0 {
+						nft := model.Nft{
+							ID:              address.String() + "-" + contractAddress.String(),
+							Owner:           address.String(),
+							ContractAddress: contractAddress.String(),
+							TokenId:         erc1155Transfer.Id.String(),
+							TxHash:          erc1155Log.TxHash.String(),
+						}
+						println("拥有erc1155 余额====" + balanceOf.String() + " id:" + erc1155Transfer.Id.String() + " ---- contractAddress:" + contractAddress.String())
+
+						//DB().Create(&nft)
+						//DB().Create(&asset)
+
+						for _, asset := range assets {
+							if asset.ContractAddress == contractAddress.String() {
+								asset.Nfts = append(asset.Nfts, nft)
+								assets = append(assets, asset)
+								continue
+							}
+						}
+
+						asset.Nfts = nil
+						asset.Nfts = append(asset.Nfts, nft)
+						assets = append(assets, asset)
+
+						DB().Clauses(clause.OnConflict{
+							Columns: []clause.Column{
+								{Name: "id"}},
+							DoUpdates: clause.AssignmentColumns([]string{"owner", "tx_hash", "token_id"}),
+						}).Create(&nft)
+					}
+				}
+			}
+		}
+	}
+
+	if len(assets) > 0 {
+		DB().Clauses(clause.OnConflict{
+			Columns: []clause.Column{
+				{Name: "id"}},
+			DoUpdates: clause.AssignmentColumns([]string{"balance"}),
+		}).Create(&assets)
+
+		jsons, _ := json.Marshal(assets)
+		println("erc1155 assets:" + string(jsons))
+	}
+	asset.Nfts = nil
+	assets = nil
+
 	for _, vLog := range filterLogs {
 		contractAddress := vLog.Address
-		println(contractAddress.String())
-		_, err := token.NewERC721Filterer(contractAddress, nil)
+		asset.ContractAddress = contractAddress.String()
+		println("contractAddress:" + contractAddress.String())
+
+		// 判断是否 erc721 资产
+		erc721, err := token.NewERC721(contractAddress, EthWsClient())
 		if err != nil {
-			println(err.Error())
+			println("erc721 err:" + err.Error())
+		} else {
+			ercTransfer, err := erc721.ParseTransfer(vLog)
+			if err != nil {
+				println("erc721Transfer err:" + err.Error())
+			} else {
+				asset.ID = address.String() + "-" + contractAddress.String()
+				asset.Address = address.String()
+				asset.AssetType = "erc721"
+
+				//获取转账的 tokenId
+				addressOf, err := erc721.OwnerOf(&bind.CallOpts{}, ercTransfer.TokenId)
+				if err != nil {
+					println("erc721Ownerof err:" + err.Error())
+				} else {
+					if addressOf == addressOf {
+						erc721CollectionName, err := erc721.Name(&bind.CallOpts{})
+						erc721BalanceOf, err := erc721.BalanceOf(&bind.CallOpts{}, address)
+						if err != nil {
+							println("erc721Name err:" + err.Error())
+						}
+						if erc721BalanceOf.Int64() != 0 {
+							asset.Balance = erc721BalanceOf.String()
+
+							nft := model.Nft{
+								ID:              address.String() + "-" + contractAddress.String(),
+								Owner:           address.String(),
+								ContractAddress: contractAddress.String(),
+								TokenId:         ercTransfer.TokenId.String(),
+								TxHash:          vLog.TxHash.String(),
+							}
+
+							for _, asset := range assets {
+								if asset.ContractAddress == contractAddress.String() {
+									asset.Nfts = append(asset.Nfts, nft)
+									assets = append(assets, asset)
+									continue
+								}
+							}
+							asset.Nfts = nil
+							asset.Nfts = append(asset.Nfts, nft)
+							assets = append(assets, asset)
+
+							DB().Clauses(clause.OnConflict{
+								Columns: []clause.Column{
+									{Name: "id"}},
+								DoUpdates: clause.AssignmentColumns([]string{"owner", "tx_hash", "token_id"}),
+							}).Create(&nft)
+						}
+						println("拥有erc721 " + erc721CollectionName + " ,tokenId:" + ercTransfer.TokenId.String())
+					}
+				}
+			}
 		}
+
+		if len(assets) > 0 {
+			DB().Clauses(clause.OnConflict{
+				Columns: []clause.Column{
+					{Name: "id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"balance"}),
+			}).Create(&assets)
+
+			jsons, _ := json.Marshal(assets)
+			println("erc721 assets:" + string(jsons))
+		}
+
+		asset.Nfts = nil
+		assets = nil
+
+		// 判断是否 erc20 资产
+		erc20, err := token.NewERC20(contractAddress, EthWsClient())
+		if err != nil {
+			println("erc20 err:" + err.Error())
+		} else {
+			erc20Of, err := erc20.BalanceOf(&bind.CallOpts{}, address)
+			if err != nil {
+				println("erc20 BalanceOf err:" + err.Error())
+			} else if erc20Of.Int64() != 0 {
+				erc20Name, err := erc20.Name(&bind.CallOpts{})
+				if err != nil {
+					println("erc20 Name err:" + err.Error())
+				} else {
+					asset.ID = address.String() + "-" + contractAddress.String()
+					asset.Address = address.String()
+					asset.Balance = erc20Of.String()
+					asset.AssetType = "erc20"
+					assets = append(assets, asset)
+					println("拥有erc20 " + erc20Name + " ,balance:" + erc20Of.String())
+				}
+			}
+		}
+
+		if len(assets) > 0 {
+			DB().Clauses(clause.OnConflict{
+				Columns: []clause.Column{
+					{Name: "id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"balance"}),
+			}).Create(&assets)
+
+			jsons, _ := json.Marshal(assets)
+			println("erc20 assets:" + string(jsons))
+		}
+
+		asset.Nfts = nil
+		assets = nil
 	}
 }
 
@@ -337,7 +534,7 @@ func ScanNftHolds() {
 
 		nft := model.Nft{
 			Owner:           transfer.To.Hex(),
-			TokenId:         transfer.TokenId.Uint64(),
+			TokenId:         transfer.TokenId.String(),
 			TxHash:          vLog.TxHash.String(),
 			ContractAddress: contractAddress.String(),
 		}
