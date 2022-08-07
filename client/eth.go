@@ -208,10 +208,11 @@ func ScanAddressAsset() {
 	}
 
 	address := common.HexToAddress("0xb816e2177F545b612e7590953F9C76983592b738")
+	// 查找地址相关的 transfer 事件
 	filter := ethereum.FilterQuery{
 		FromBlock: start,
 		ToBlock:   end,
-		Topics:    [][]common.Hash{{logTransferSigHash}},
+		Topics:    [][]common.Hash{{logTransferSigHash}, {}, {address.Hash()}},
 	}
 	filterLogs, err := EthWsClient().FilterLogs(context.Background(), filter)
 	if err != nil {
@@ -247,10 +248,63 @@ func ScanAddressAsset() {
 
 	for _, vLog := range filterLogs {
 		contractAddress := vLog.Address
-		println(contractAddress.String())
-		_, err := token.NewERC721Filterer(contractAddress, nil)
+		println(vLog.TxHash.String())
+		erc721, err := token.NewERC721Filterer(contractAddress, nil)
 		if err != nil {
 			println(err.Error())
+		}
+
+		erc20, err := token.NewERC20(contractAddress, ethWsClient)
+		if err != nil {
+			println(err.Error())
+		}
+
+		//erc20, err := token.NewERC20Filterer(contractAddress, nil)
+		//if err != nil {
+		//	println(err.Error())
+		//}
+
+		erc1155, err := token.NewERC1155Filterer(contractAddress, nil)
+		if err != nil {
+			println(err.Error())
+		}
+
+		if erc721 != nil {
+			transfer, err := erc721.ParseTransfer(vLog)
+			if err != nil {
+				println("erc721：" + err.Error())
+			} else {
+				println("erc721：" + transfer.TokenId.String())
+			}
+		}
+
+		if erc20 != nil {
+			//transfer, err := erc20.ParseTransfer(vLog)
+			//if err != nil {
+			//	println("erc20：" + err.Error())
+			//} else {
+			//
+			//	println("erc20：" + transfer.Value.String())
+			//}
+			balanceOf, err := erc20.BalanceOf(&bind.CallOpts{}, address)
+			tokenName, err := erc20.Name(&bind.CallOpts{})
+			if err != nil {
+				println("erc20：" + err.Error())
+			} else {
+				println(tokenName + ",余额======》》》" + balanceOf.String())
+			}
+		}
+
+		if erc1155 != nil {
+			transfer, err := erc1155.ParseTransferBatch(vLog)
+			if err != nil {
+				println("erc1155：" + err.Error())
+			} else {
+				for _, id := range transfer.Ids {
+					println("erc1155：id==" + id.String())
+				}
+
+			}
 		}
 	}
 }

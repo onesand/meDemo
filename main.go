@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"math"
 	"math/big"
 	"meDemo/client"
@@ -59,6 +60,12 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "pong")
 	})
 
+	r.POST("/webhook", func(c *gin.Context) {
+		s, _ := ioutil.ReadAll(c.Request.Body)
+		println(string(s))
+		c.String(http.StatusOK, "got it")
+	})
+
 	// Get user value
 	r.GET("/user/:name", func(c *gin.Context) {
 		user := c.Params.ByName("name")
@@ -69,7 +76,6 @@ func setupRouter() *gin.Engine {
 			c.JSON(http.StatusOK, gin.H{"user": user, "status": "no value"})
 		}
 	})
-
 	// Authorized group (uses gin.BasicAuth() middleware)
 	// Same than:
 	// authorized := r.Group("/")
@@ -109,7 +115,7 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	client.SetupConnections()
+	//client.SetupConnections()
 
 	r := setupRouter()
 	port := os.Getenv("PORT")
